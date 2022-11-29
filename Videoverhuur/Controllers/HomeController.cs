@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using VideoLibrary.Models;
@@ -11,24 +12,37 @@ namespace Videoverhuur.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly VideoRepository repository;
+        private Klant currentKlant;
+        private readonly VideoDbContext context;
 
-        public HomeController(ILogger<HomeController> logger, VideoRepository repository)
+        public HomeController(ILogger<HomeController> logger, VideoRepository repository, VideoDbContext context)
         {
             _logger = logger;
             this.repository = repository;
+            this.context = context;
         }
-
+        [HttpGet]
         public IActionResult Index()
         {
-            var sessionKlant = HttpContext.Session.GetString("AangemeldeKlant");
-            Klant? aangemeldeKlant = null;
-            if (!string.IsNullOrEmpty(sessionKlant))
+            var klant = new Klant();
+            return View(klant);
+        }
+        [HttpPost]
+        public IActionResult Index(Klant klant)
+        {
+            Klant? gekozenKlant = new Klant();
+            gekozenKlant = (from k in context.Klanten
+                                where k.Naam == klant.Naam && k.PostCode == klant.PostCode
+                                select k).FirstOrDefault();
+            if (gekozenKlant == null)
             {
-                aangemeldeKlant = JsonConvert.DeserializeObject<Klant>(sessionKlant);
-                return RedirectToAction(nameof(GenreKiezen));
+                return View();
             }
             else
-                return View(aangemeldeKlant);
+            {
+                currentKlant = gekozenKlant;
+                return RedirectToAction(nameof(GenreKiezen));
+            }
         }
 
         public IActionResult Privacy()
@@ -41,18 +55,7 @@ namespace Videoverhuur.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        public IActionResult FindKlantByName(string naam)
-        {
-            var klant = repository.FindKlantByName(naam);
-            return ToonJuistePagina(klant);
-        }
-        public IActionResult ToonJuistePagina(Klant klant)
-        {
-            if (klant != null)
-                return View(nameof(GenreKiezen));
-            else
-                return View(nameof(Index));
-        }
+       
         public IActionResult GenreKiezen()
         {
             var genres = repository.GetAllGenres();
@@ -110,6 +113,20 @@ namespace Videoverhuur.Controllers
         {
             var sessionWinkelMandje = HttpContext.Session.GetString("Winkelmandje");
             List<Film>? winkelmandje = JsonConvert.DeserializeObject<List<Film>>(sessionWinkelMandje);
+            foreach(var film in winkelmandje)
+            {
+                context.Verhuringen.Add(new Verhuring
+                {
+                    VerhuurId = context.Verhuringen.Count() + 1,
+                    KlantId = currentKlant.KlantId,
+                    FilmId = film.FilmId,
+                    VerhuurDatum = DateTime.Today
+                });
+                var item = repository.GetFilmById(film.FilmId);
+                item.InVoorraad--;
+                item.UitVoorraad++;
+                context.SaveChanges();
+            }
             return View(winkelmandje);
         }
     }

@@ -14,7 +14,7 @@ public class Begroeting : ViewComponent
     public IViewComponentResult Invoke(string klantnaam)
     {
         var klant = repository.FindKlantByName(klantnaam);
-        var begroeting = klant.KlantStat == 1 ? "Welkom! Meld je aan om te kunnen huren!" : "Aangemeld";
+        var begroeting = klant == null ? "Welkom! Meld je aan om te kunnen huren!" : $"Welkom, {klant.Voornaam} {klant.Naam}";
         return View((object)begroeting);
     }
 }

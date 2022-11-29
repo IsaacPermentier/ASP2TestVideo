@@ -15,6 +15,7 @@ public class VideoRepository
 	{
 		this.context = context;
 	}
+	
 	public Klant? GetKlantById(int id)
 		=> context.Klanten.Find(id);
 

@@ -1,8 +1,16 @@
-﻿@model IEnumerable<Klant>
+﻿@model Klant
 @{
     ViewData["Title"] = "Home Page";
 }
-
-<form>
-    <label>Naam</label>
+<form asp-action="Index" method="post">
+    <label asp-for="Naam"></label>
+    <input asp-for="Naam" />
+    <label asp-for="PostCode"></label>
+    <input asp-for="PostCode" />
+    @if(Model == null)
+    {
+        <div style="color:red">Onbekende klant, probeer opnieuw</div>
+    }
+    <input type="submit" value="Aanmelden" class="btn btn-primary" />
 </form>
+
