@@ -1,0 +1,11 @@
+﻿@model Film
+@{
+    ViewData["Title"] = "Verwijderen";
+}
+
+<h2>Verwijder gehuurde film</h2>
+<p>"@Model.Titel" verwijderen uit jouw winkelmandje?</p>
+
+<a class="btn btn-danger" asp-action="Verwijderd" asp-route-FilmId="@Model.FilmId">JA</a>
+<a class="btn btn-secondary" asp-action="Winkelmandje">NEEN</a>
+

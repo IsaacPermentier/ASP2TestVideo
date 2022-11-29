@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Winkelmandje";
+}
+
+<h2>Winkelmandje</h2>
+@if (ViewBag.Winkelmandje != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Titel</th>
+                <th>Prijs</th>
+                <th>Verwijderen</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var film in ViewBag.Winkelmandje)
+            {
+                <tr>
+                    <td>@film.Titel</td>
+                    <td>€ @film.Prijs</td>
+                    <td><a asp-action="Verwijderen" asp-route-FilmId="@film.FilmId"><img src="~/images/delete.png" height="30" width="30" /></a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3>Er bevinden zich geen films in het winkelmandje</h3>
+}
+<a asp-action="GenreKiezen" class="btn btn-primary">Verder winkelen</a>
+@if (ViewBag.Winkelmandje != null)
+{
+    <a asp-action="Afrekenen" class="btn btn-secondary">Afrekenen</a>
+}
+
+

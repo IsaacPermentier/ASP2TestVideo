@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Film>
+@{
+    ViewData["Title"] = "Filmkeuze";
+}
+
+<h2>@ViewBag.GenreNaam</h2>
+@if (Model == null)
+{
+    <h3>Er zijn geen films gevonden van het genre @ViewBag.GenreNaam</h3>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Titel</th>
+                <th>Prijs</th>
+                <th>In Voorraad</th>
+                <th>Huren</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var film in Model)
+            {
+                <tr>
+                    <td>@film.Titel</td>
+                    <td>@Html.DisplayFor(f => film.Prijs)</td>
+                    <td>@film.InVoorraad</td>
+                    @if (film.InVoorraad > 0)
+                    {
+                        <td>
+                            <a asp-action="Winkelmandje" asp-route-FilmId="@film.FilmId"><img src="~/images/plus.png" alt="plus" height="30" width="30" /></a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<a asp-action="GenreKiezen" class="btn btn-primary">Terug naar genre-overzicht</a>
+
+
+
+

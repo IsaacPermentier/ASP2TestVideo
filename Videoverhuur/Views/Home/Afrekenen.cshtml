@@ -1,0 +1,39 @@
+﻿@model List<Film>
+@{
+    ViewData["Title"] = "Afrekenen";
+}
+
+<h2>Afrekenen</h2>
+@if (Model != null || Model.Count() != 0)
+{
+    decimal totaal = 0;
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Titel</th>
+                <th>Prijs</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var film in Model)
+            {
+                <tr>
+                    <td>@film.Titel</td>
+                    <td>@Html.DisplayFor(f => film.Prijs)</td>
+                </tr>
+                totaal += film.Prijs;
+            }
+            <tr>
+                <td><b>Totaal</b></td>
+                <td>€ @totaal</td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <h3>Er bevinden zich geen films in het winkelmandje</h3>
+}
+
+<div>Wordt gefactureerd aan:</div>
+
