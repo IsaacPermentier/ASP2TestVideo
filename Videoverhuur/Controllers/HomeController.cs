@@ -31,7 +31,7 @@ namespace Videoverhuur.Controllers
         {
             Klant? gekozenKlant = new Klant();
             gekozenKlant = (from k in context.Klanten
-                                where k.Naam == klant.Naam && k.PostCode == klant.PostCode
+                                where k.Naam == klant.Naam.ToUpper() && k.PostCode == klant.PostCode
                                 select k).FirstOrDefault();
             if (gekozenKlant == null)
             {
