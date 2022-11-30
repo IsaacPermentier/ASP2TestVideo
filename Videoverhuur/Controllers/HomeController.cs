@@ -12,7 +12,6 @@ namespace Videoverhuur.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly VideoRepository repository;
-        private Klant currentKlant;
         private readonly VideoDbContext context;
 
         public HomeController(ILogger<HomeController> logger, VideoRepository repository, VideoDbContext context)
@@ -36,11 +35,12 @@ namespace Videoverhuur.Controllers
                                 select k).FirstOrDefault();
             if (gekozenKlant == null)
             {
-                return View();
+                return View(nameof(Index));
             }
             else
             {
-                currentKlant = gekozenKlant;
+                var geserializeerdeKlant = JsonConvert.SerializeObject(gekozenKlant);
+                HttpContext.Session.SetString("Aangemeld", geserializeerdeKlant);
                 return RedirectToAction(nameof(GenreKiezen));
             }
         }
@@ -112,21 +112,24 @@ namespace Videoverhuur.Controllers
         public IActionResult Afrekenen()
         {
             var sessionWinkelMandje = HttpContext.Session.GetString("Winkelmandje");
+            var sessionKlant = HttpContext.Session.GetString("Aangemeld");
+            Klant? klant = JsonConvert.DeserializeObject<Klant>(sessionKlant);
             List<Film>? winkelmandje = JsonConvert.DeserializeObject<List<Film>>(sessionWinkelMandje);
             foreach(var film in winkelmandje)
             {
                 context.Verhuringen.Add(new Verhuring
                 {
-                    VerhuurId = context.Verhuringen.Count() + 1,
-                    KlantId = currentKlant.KlantId,
+                    KlantId = klant.KlantId,
                     FilmId = film.FilmId,
                     VerhuurDatum = DateTime.Today
                 });
                 var item = repository.GetFilmById(film.FilmId);
                 item.InVoorraad--;
                 item.UitVoorraad++;
+                item.TotaalVerhuurd++;
                 context.SaveChanges();
             }
+            ViewBag.Klant = klant;
             return View(winkelmandje);
         }
     }

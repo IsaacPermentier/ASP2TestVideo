@@ -25,7 +25,7 @@
             }
             <tr>
                 <td><b>Totaal</b></td>
-                <td>€ @totaal</td>
+                <td><b>€ @totaal</b></td>
             </tr>
         </tbody>
     </table>
@@ -35,5 +35,8 @@ else
     <h3>Er bevinden zich geen films in het winkelmandje</h3>
 }
 
-<div>Wordt gefactureerd aan:</div>
+<p>Wordt gefactureerd aan:</p>
+<p>@ViewBag.Klant.Naam</p>
+<p>@ViewBag.Klant.Straat_Nr</p>
+<p>@ViewBag.Klant.Gemeente</p>
 

@@ -3,9 +3,9 @@
     ViewData["Title"] = "GenreKiezen";
 }
 
-<p class="blauw">Klik op het gewenste GENRE</p>
+<p class="blauw"><k>Klik op het gewenste GENRE</k></p>
 @foreach(var genre in Model)
 {
-    <a asp-action="Filmkeuze" asp-route-GenreId="@genre.GenreId">@genre.GenreNaam</a>
+    <a class="genrelijst" asp-action="Filmkeuze" asp-route-GenreId="@genre.GenreId">@genre.GenreNaam</a>
 }
 

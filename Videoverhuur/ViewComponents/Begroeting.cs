@@ -1,20 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VideoLibrary.Models;
+using Videoverhuur.Controllers;
 using VideoLibrary.Repositories;
+using Newtonsoft.Json;
 
 namespace Videoverhuur.ViewComponents;
 
 public class Begroeting : ViewComponent
 {
-    private readonly VideoRepository repository;
-    public Begroeting(VideoRepository repository)
+    public IViewComponentResult Invoke()
     {
-        this.repository = repository;
-    }
-    public IViewComponentResult Invoke(string klantnaam)
-    {
-        var klant = repository.FindKlantByName(klantnaam);
-        var begroeting = klant == null ? "Welkom! Meld je aan om te kunnen huren!" : $"Welkom, {klant.Voornaam} {klant.Naam}";
+        var sessionklant = HttpContext.Session.GetString("Aangemeld");
+        Klant? klant;
+        if (!string.IsNullOrEmpty(sessionklant))
+        {
+            klant = JsonConvert.DeserializeObject<Klant>(sessionklant);
+        }
+        else
+            klant = null;
+        
+        var begroeting = klant == null ? "Welkom! Meld je aan om te kunnen huren!" : $"Welkom, {klant.Voornaam} {klant.Naam}!";
         return View((object)begroeting);
     }
 }

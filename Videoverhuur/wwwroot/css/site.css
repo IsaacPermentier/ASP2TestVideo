@@ -21,9 +21,18 @@ body {
   margin-bottom: 60px;
 }
 .blauw{
-    background-color:cornflowerblue;
+    background-color:lightskyblue;
+    border-radius:5px;
+    height:30px;
 }
 input{
     display:block;
     margin:10px 0px 10px 0px;
+}
+.genrelijst{
+    margin-right:5px;
+}
+k {
+    vertical-align: middle;
+    padding:20px;
 }

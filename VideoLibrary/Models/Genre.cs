@@ -10,5 +10,4 @@ public class Genre
 {
     public int GenreId { get; set; }
     public string GenreNaam { get; set; }
-    public List<Film> Films { get; set; } = new List<Film>();
 }

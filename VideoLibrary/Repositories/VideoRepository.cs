@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VideoLibrary.Models;
+using System.Net.Http;
 
 namespace VideoLibrary.Repositories;
 
@@ -15,26 +16,13 @@ public class VideoRepository
 	{
 		this.context = context;
 	}
-	
-	public Klant? GetKlantById(int id)
-		=> context.Klanten.Find(id);
 
-	public IEnumerable<Klant> GetAllKlanten()
-		=> context.Klanten.AsNoTracking();
-	public Klant? FindKlantByName(string naam)
-	{
-		var klant = context.Klanten.Where(k => k.Naam == naam)
-			.FirstOrDefault();
-		return klant;
-	}
 	public IEnumerable<Genre> GetAllGenres()
 		=> context.Genres.AsNoTracking();
 
 	public Genre? GetGenreById(int id)
 		=> context.Genres.Find(id);
 
-	public IEnumerable<Film> GetAllFilms()
-		=> context.Films.AsNoTracking();
 
 	public IEnumerable<Film> GetFilmsByGenreId(int genreId)
 	{

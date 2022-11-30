@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using VideoLibrary.Models;
 using VideoLibrary.Repositories;
+using Videoverhuur;
 
 var builder = WebApplication.CreateBuilder(args);
 
